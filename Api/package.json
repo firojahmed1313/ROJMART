@@ -1,0 +1,32 @@
+{
+  "name": "rojmartapi",
+  "version": "1.0.0",
+  "description": "DigiMart: A Secure Digital Product Marketplace",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/firojahmed1313/ROJMART.git"
+  },
+  "author": "MD FIROJ AHMED",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/firojahmed1313/ROJMART/issues"
+  },
+  "homepage": "https://github.com/firojahmed1313/ROJMART#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}

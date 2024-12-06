@@ -1,0 +1,10 @@
+
+PORT = 5000
+
+MONGO_URL = mongodb+srv://newgitpods:VL6eb0rHhdZJ1gv0@mdfirojahmed.chpjhjr.mongodb.net/?retryWrites=true&w=majority
+
+JWT_SCODE = FIROJ
+
+NODE_MODE = devlopment
+
+FRONTED_URL = https://5173-firojahmed131-rojblogfb-677v4h1t0u5.ws-us115.gitpod.io
