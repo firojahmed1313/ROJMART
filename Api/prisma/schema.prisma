@@ -1,0 +1,163 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  email            String   @unique
+  emailVerified    Boolean  @default(false)
+  password         String
+  phone            String?
+  address          String?
+  profilePictureUrl String?
+  role             String @default("USER") 
+  status           String @default("ACTIVE")
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  lastLogin        DateTime?
+  
+  products         product[]
+  reviews          review[]
+  carts            cart[]
+  notifications    notification[]
+
+  
+  @@index([role])
+  
+}
+
+
+
+model product {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  price       Float
+  salePrice   Float?
+  category  String
+  
+  // Product details
+  brand       String?   
+  sku         String    @unique
+  isActive    Boolean   @default(true) 
+  
+  // Media
+  thumbnail   String
+  images      String[]
+  
+  // Digital product support
+  
+  // Timestamps
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  // Relations
+  reviews     review[]
+  //CartItem cartItem[]
+  File file[]
+    
+  // Seller relation
+  seller      user       @relation(fields: [sellerId], references: [id])
+  sellerId    String     @db.ObjectId
+  
+  @@index([category])
+  @@index([brand])
+  
+  
+}
+
+
+
+model cart {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  user        user      @relation(fields: [userId], references: [id])
+  userId      String @db.ObjectId
+  
+  totalAmount Float
+  currency    String    @default("USD")
+  status      String @default("PENDING")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  cartItems   cartItem[]
+
+  @@index([userId])
+
+}
+
+model cartItem {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  cart        cart      @relation(fields: [cartId], references: [id])
+  cartId      String @db.ObjectId
+ // product     product   @relation(fields: [productId], references: [id])
+  productId   String @db.ObjectId
+  
+  quantity    Int       @default(1)
+  price       Float
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  @@index([cartId])
+  @@unique([cartId, productId])
+}
+
+
+model file {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  product    product   @relation(fields: [productId], references: [id])
+  productId  String  @db.ObjectId
+  fileUrl    String
+  fileType   String?    // e.g., 'pdf', 'mp3', 'video'
+  fileSize   Int?       // in bytes
+  expiresAt  DateTime?
+  
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([productId])
+}
+
+model review {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  product     product   @relation(fields: [productId], references: [id])
+  productId   String @db.ObjectId
+  user        user      @relation(fields: [userId], references: [id])
+  userId      String @db.ObjectId
+  
+  rating      Int       // Rating out of 5
+  comment     String?
+  isVerified  Boolean   @default(false)
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([productId])
+  @@index([userId])
+  
+  @@unique([userId, productId])
+}
+
+model notification {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  user        user      @relation(fields: [userId], references: [id])
+  userId      String @db.ObjectId
+  
+  type        String
+  message     String
+  payload     Json?
+  
+  createdAt   DateTime  @default(now())
+  read        Boolean   @default(false)
+  readAt      DateTime?
+
+  @@index([userId])
+}
+
